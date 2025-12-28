@@ -1,1 +1,38 @@
+local comp = require("component")
+local event = require("event")
+local computer = require("computer")
+local trans = comp.transposer
+local side = require("sides")
+local os = require("os")
 
+trans.transferItem(side.down, side.south)
+while true do
+    void = true
+    size = trans.getAllStacks(side.north).getAll() --side.north это сундук с которого будет забран предмет north сторона света
+    lab = "null"
+    if size ~= nil then
+        for hyinya, a in pairs(size) do
+            if a.label ~= nil then
+                void = false
+                lab = a.label
+            end
+        end
+    end
+    os.sleep(1)
+    if void == false then
+        trans.transferItem(side.north, side.down, 64)
+        comlete = false
+        while not comlete do
+            progress = trans.getAllStacks(side.down).getAll() -- смотрит что в алтаре
+            for key, label in pairs(progress) do
+                if label.label ~= lab then
+                    trans.transferItem(side.down, side.south, 64)
+                    comlete = true
+                end
+                os.sleep(1)
+            end
+        end
+
+        os.sleep(1)
+    end
+end
